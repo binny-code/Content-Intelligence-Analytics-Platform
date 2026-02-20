@@ -1,0 +1,10 @@
+Django==4.2
+djangorestframework
+psycopg2-binary
+pandas
+numpy
+scikit-learn
+openai
+python-dotenv
+celery
+redis

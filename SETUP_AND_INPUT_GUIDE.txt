@@ -1,0 +1,284 @@
+AI CONTENT INTELLIGENCE PLATFORM
+SETUP & INPUT GUIDE
+================================
+
+This document explains:
+1. What values you need to provide
+2. Where to provide them
+3. How data flows through the system
+
+
+------------------------------------------------
+1. ENVIRONMENT VARIABLES (MANDATORY)
+------------------------------------------------
+
+Create a file named `.env` in the project root.
+
+File: .env
+--------------------------------
+OPENAI_API_KEY=your_openai_api_key_here
+DJANGO_SECRET_KEY=your_django_secret_key
+DEBUG=True
+
+
+Where used:
+- OPENAI_API_KEY
+  Used in:
+  apps/llm_engine/llm_service.py
+
+- DJANGO_SECRET_KEY
+  Used in:
+  config/settings.py
+
+- DEBUG
+  Used in:
+  config/settings.py
+
+
+------------------------------------------------
+2. DATABASE CONFIGURATION
+------------------------------------------------
+
+File: config/settings.py
+--------------------------------
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'content_db',
+        'USER': 'postgres',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+
+What to change:
+- NAME     → your database name
+- USER     → your postgres username
+- PASSWORD → your postgres password
+- HOST     → localhost (or cloud DB host)
+- PORT     → 5432 (default postgres)
+
+After updating:
+Run:
+python manage.py makemigrations
+python manage.py migrate
+
+
+------------------------------------------------
+3. CONTENT INPUT (API REQUEST)
+------------------------------------------------
+
+API Endpoint:
+POST /api/content/
+
+File handling request:
+apps/content/views.py
+
+Input format (JSON):
+--------------------------------
+{
+  "title": "AI in Academic Publishing",
+  "description": "AI improves peer review, metadata extraction, and content discovery."
+}
+
+What each field means:
+- title       → Content or product title
+- description → Manuscript abstract or product description
+
+What happens internally:
+1. Data saved to database
+2. Description sent to LLM
+3. LLM extracts:
+   - Keywords
+   - Category
+   - Summary
+
+
+------------------------------------------------
+4. LLM PROMPT INPUT
+------------------------------------------------
+
+File:
+apps/llm_engine/llm_service.py
+
+Prompt section:
+--------------------------------
+prompt = f"""
+Analyze the following content.
+1. Extract keywords
+2. Suggest category
+3. Summarize in 2 lines
+
+Content: {text}
+"""
+
+What you can modify:
+- Add compliance checks
+- Add SEO scoring
+- Add competitor comparison
+- Change tone (academic / retail)
+
+IMPORTANT:
+Only modify the prompt text.
+DO NOT change API call logic.
+
+
+------------------------------------------------
+5. ANALYTICS & SQL INPUT
+------------------------------------------------
+
+File:
+apps/analytics/services.py
+
+SQL Query:
+--------------------------------
+WITH content_stats AS (
+    SELECT category,
+           COUNT(*) AS total_items
+    FROM content_contentitem
+    GROUP BY category
+)
+SELECT * FROM content_stats;
+
+What this query uses:
+- category → auto-filled by LLM (optional)
+- content_contentitem → Django table
+
+You can modify:
+- Add date filters
+- Add joins
+- Add window functions
+
+Example enhancement:
+- Average content processing time
+- Acceptance rate per category
+
+
+------------------------------------------------
+6. STATISTICAL ANALYSIS INPUT
+------------------------------------------------
+
+File:
+apps/analytics/services.py
+
+Regression logic:
+--------------------------------
+df["Index"] = range(len(df))
+
+linregress(
+    df["Index"],
+    df["Total"]
+)
+
+What it means:
+- Index → simulated independent variable
+- Total → dependent variable
+
+You can replace Index with:
+- Time
+- Metadata score
+- Review duration
+- Conversion rate
+
+Library used:
+scipy.stats
+
+
+------------------------------------------------
+7. BUSINESS REPORT GENERATION
+------------------------------------------------
+
+File:
+apps/reports/services.py
+
+Prompt:
+--------------------------------
+Explain this statistical result in business terms:
+{stats}
+
+What stats contains:
+- slope
+- p_value
+- r_squared
+
+LLM Output:
+- Human-readable explanation
+- Management-friendly summary
+
+You can customize:
+- Executive tone
+- Technical tone
+- Publisher vs Retail context
+
+
+------------------------------------------------
+8. URL ROUTING
+------------------------------------------------
+
+File:
+config/urls.py
+
+Endpoints:
+--------------------------------
+/api/content/ → Create and analyze content
+/api/stats/   → View statistical insights
+
+No input needed here unless:
+- You add authentication
+- You add new modules
+
+
+------------------------------------------------
+9. RUN COMMANDS (ORDER MATTERS)
+------------------------------------------------
+
+1. Activate environment
+2. Install dependencies
+3. Apply migrations
+4. Run server
+
+Commands:
+--------------------------------
+pip install -r requirements.txt
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+
+
+------------------------------------------------
+10. OPTIONAL INPUTS (ADVANCED)
+------------------------------------------------
+
+- Redis URL (for Celery)
+- JWT secret (for auth)
+- Docker environment variables
+- Cloud database credentials
+
+These are NOT required for MVP.
+
+
+------------------------------------------------
+PROJECT FLOW SUMMARY
+------------------------------------------------
+
+User Input (API)
+   ↓
+Django API
+   ↓
+PostgreSQL Storage
+   ↓
+LLM Analysis
+   ↓
+SQL Analytics
+   ↓
+Statistical Modeling
+   ↓
+LLM Business Explanation
+   ↓
+Final Output (JSON)
+
+
+------------------------------------------------
+END OF FILE
+------------------------------------------------

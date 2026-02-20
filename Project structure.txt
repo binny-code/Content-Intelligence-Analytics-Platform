@@ -1,0 +1,17 @@
+ai_content_intelligence/
+│
+├── manage.py
+├── requirements.txt
+├── Dockerfile
+│
+├── config/
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+│
+├── apps/
+│   ├── content/
+│   ├── analytics/
+│   ├── llm_engine/
+│   └── reports/

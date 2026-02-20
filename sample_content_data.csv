@@ -1,0 +1,9 @@
+content_id,title,description,category,review_days,metadata_score,acceptance_status
+1,AI in Academic Publishing,"AI improves peer review efficiency and content discovery",Technology,28,85,Accepted
+2,Digital Transformation in Journals,"Automation streamlines editorial workflows",Technology,35,70,Accepted
+3,Metadata Optimization Strategies,"Improving metadata increases article visibility",Publishing,22,90,Accepted
+4,Manual Review Bottlenecks,"Traditional review methods slow publication",Publishing,45,60,Rejected
+5,AI for Retail Catalogs,"AI-driven catalog optimization improves conversions",Retail,30,88,Accepted
+6,Incomplete Metadata Impact,"Missing metadata reduces search rankings",Retail,50,55,Rejected
+7,Automated Peer Review","Machine learning accelerates reviewer matching",Technology,26,92,Accepted
+8,Content Compliance Issues","Non-standard formats delay publication",Publishing,42,65,Rejected
